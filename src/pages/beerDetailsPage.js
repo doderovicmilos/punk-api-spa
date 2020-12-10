@@ -1,68 +1,76 @@
-import {pubSub} from "../utils/pubsub";
+import beerDetailsTemplate from "../templates/beerDetailsTemplate.html";
+import errorTemplate from "../templates/errorTemplate.html";
+import loaderTemplate from "../templates/loaderTemplate.html";
 
-const LOAD_PENDING = "LOAD_PENDING"
-const LOAD_SUCCESS = "LOAD_SUCCESS"
-const LOAD_ERROR = "LOAD_ERROR"
+
 
 export default class BeerDetailsPage {
 
-  constructor({id}) {
-    this.id = id;
+  constructor(router) {
+    this.id = router.extractId();
+    this.router = router;
     this.model = {};
     this.error = null;
     this.loading = false;
-    this.ps = pubSub();
-    this.ps.subscribe(LOAD_PENDING, this.onLoadPending.bind(this));
-    this.ps.subscribe(LOAD_SUCCESS, this.onLoadSuccess.bind(this));
-    this.ps.subscribe(LOAD_ERROR, this.onLoadError.bind(this));
     this.load();
   }
 
   load(){
-    this.ps.publish(LOAD_PENDING);
+    this.onLoadPending();
     fetch(`https://api.punkapi.com/v2/beers/${this.id}`)
       .then(response => response.json())  // convert to json
       .then(response => {
-        if (response.statusCode >= 400) this.ps.publish(LOAD_ERROR, response);
-        else this.ps.publish(LOAD_SUCCESS, response)
+        if (response.statusCode >= 400) this.onLoadError(response);
+        else this.onLoadSuccess(response);
       })
-      .catch(err => this.ps.publish(LOAD_ERROR,  err));
+      .catch(err => this.onLoadError(err));
   }
 
   onLoadPending(){
     this.loading = true;
     this.model = {};
     this.error = null;
-    this.render();
+    this.router.render(this);
   }
 
   onLoadSuccess(data){
     this.loading = false;
     this.model = { ...data[0] };
-    this.render();
+    this.router.render(this);
   }
 
   onLoadError(error){
     this.loading = false;
     this.error = error;
-    this.render();
+    this.router.render(this);
   }
 
-  render(){
-    document.getElementById('app').innerHTML =
-      this.error
-        ?
-        `<section><h3>Error loading page</h3></section>`
-        :
-        this.loading
-          ?
-          `<section><h3>Loading details</h3></section>`
-          :
-          `<section>
-            <h3>${this.model.name}</h3>
-            <p>${this.model.description}</p>
-          </section>`
-  };
+  getDetailsContent(){
+    const element = document.createElement('div');
+    element.innerHTML = beerDetailsTemplate;
+    element.querySelector('.details-name').innerText = this.model.name;
+    element.querySelector('.details-description').innerText = this.model.description;
+    return element;
+  }
 
+  getErrorContent(){
+    const element = document.createElement('section');
+    element.innerHTML = errorTemplate;
+    element.querySelector('.error-message').innerText = this.error.message;
+    return element;
+  }
+
+  getLoaderContent(){
+    const element = document.createElement('section');
+    element.innerHTML = loaderTemplate;
+    element.querySelector('.loader-message').innerText = 'Loading details page...';
+    return element;
+  }
+
+  getContent(){
+      if(this.error) return this.getErrorContent();
+      if(this.loading) return this.getLoaderContent();
+      else return this.getDetailsContent();
+  };
 
 }

@@ -1,3 +1,2 @@
 import './styles/main.css';
-import './utils/router';
-
+import router from './utils/router';

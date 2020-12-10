@@ -3,32 +3,49 @@ import beerListPage from "../pages/beerListPage";
 import errorPage from "../pages/errorPage";
 import BeerDetailsPage from "../pages/beerDetailsPage";
 
-const routes = [
-  { pathPattern: /^\/$/, component: homePage },
-  { pathPattern: /^\/list/, component: beerListPage },
-  { pathPattern: /^\/details\/\d{1,2}$/, component: BeerDetailsPage }
-];
+class Router {
 
-const router = () => {
-  const path = parseLocation();
-  const id = extractId(path);
-  const pageNumber = extractPageNumber(path);
-  const pageSize = extractPageSize(path);
-  const componentClass = findComponentByPath(path, routes) ? findComponentByPath(path, routes).component : errorPage;
-  const params = { id, pageSize, pageNumber };
-  const component = new componentClass(params);
-  component.render();
-};
+  constructor() {
+    this.routes = [
+      {pathPattern: /^\/$/, component: homePage},
+      {pathPattern: /^\/list/, component: beerListPage},
+      {pathPattern: /^\/details\/\d{1,4}$/, component: BeerDetailsPage}
+    ];
+    window.addEventListener('hashchange', this.route.bind(this));
+    window.addEventListener('load', this.route.bind(this));
+  }
 
-const parseLocation = () => location.hash.slice(1) || '/';
+  route() {
+    const path = this.parseLocation();
+    const componentClass = this.findComponentByPath(path) ? this.findComponentByPath(path).component : errorPage;
+    const component = new componentClass(this);
+  }
 
-const findComponentByPath = (path, routes) => routes.find(r => path.match(r.pathPattern, 'gm')) || null;
+  parseLocation() {
+    return location.hash.slice(1) || '/';
+  }
 
-const extractId = (path) => path.match(/\/([0-9]+)/, 'gm') ? path.match(/\/([0-9]+)/, 'gm')[0].replace("/", "") : null;
+  findComponentByPath(path) {
+    return this.routes.find(r => path.match(r.pathPattern, 'gm')) || null;
+  }
 
-const extractPageNumber = (path) => path.match(/(pageNumber=[0-9]+)/, 'gm') ? path.match(/(pageNumber=[0-9]+)/, 'gm')[0].replace("pageNumber=", "") : null;
+  extractId() {
+    const path = this.parseLocation();
+    return path.match(/\/([0-9]+)/, 'gm') ? path.match(/\/([0-9]+)/, 'gm')[0].replace("/", "") : null;
+  }
 
-const extractPageSize = (path) => path.match(/(pageSize=[0-9]+)/, 'gm') ? path.match(/(pageSize=[0-9]+)/, 'gm')[0].replace("pageSize=", "") : null;
+  extractQueryParam(param) {
+    const path = this.parseLocation();
+    return path.match(`(${param}=[0-9]+)`, 'gm') ? path.match(`(${param}=[0-9]+)`, 'gm')[0].replace(`${param}=`, "") : null;
+  }
 
-window.addEventListener('hashchange', router);
-window.addEventListener('load', router);
+  render(component){
+    console.log(component);
+    console.log(component.getContent());
+    document.getElementById('app').innerHTML = "";
+    document.getElementById('app').appendChild(component.getContent());
+  }
+
+}
+
+export default new Router();
