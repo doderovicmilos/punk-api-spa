@@ -1,3 +1,14 @@
-body {
+body {}
 
+
+nav {
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+}
+
+body nav a{
+    font-size: 1.5em;
+    width: 100px;
 }

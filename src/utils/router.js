@@ -1,39 +1,34 @@
-import homePage from '../pages/homePageTemplate';
-import beerListPage from "../pages/beerListPageTemplate";
-import errorPage from "../pages/errorPageTemplate";
-import beerDetailsPage from "../pages/beerDetailsPageTemplate";
+import homePage from '../pages/homePage';
+import beerListPage from "../pages/beerListPage";
+import errorPage from "../pages/errorPage";
+import BeerDetailsPage from "../pages/beerDetailsPage";
 
 const routes = [
-  { path: /^\/$/, component: homePage },
-  { path: /^\/details\/\d{1,2}$/, component: beerDetailsPage }
+  { pathPattern: /^\/$/, component: homePage },
+  { pathPattern: /^\/list/, component: beerListPage },
+  { pathPattern: /^\/details\/\d{1,2}$/, component: BeerDetailsPage }
 ];
 
-
 const router = () => {
-  // TODO: Get the current path
-  // TODO: Find the component based on the current path
-  // TODO: If there's no matching route, get the "Error" component
-  // TODO: Render the component in the "app" placeholder
-  // Find the component based on the current path
   const path = parseLocation();
-
-
-
-  const id =  path.match(/\/([0-9]+)(?=[^\/]*$)/, 'gm') ? path.match(/\/([0-9]+)(?=[^\/]*$)/, 'gm')[1] : null;
-
-
-  // // If there's no matching route, get the "Error" component
-  const { component = errorPage } = findComponentByPath(path, routes) || {};
-  // // Render the component in the "app" placeholder
-  document.getElementById('app').innerHTML = component.render(id);
-
-
+  const id = extractId(path);
+  const pageNumber = extractPageNumber(path);
+  const pageSize = extractPageSize(path);
+  const componentClass = findComponentByPath(path, routes) ? findComponentByPath(path, routes).component : errorPage;
+  const params = { id, pageSize, pageNumber };
+  const component = new componentClass(params);
+  component.render();
 };
 
-const parseLocation = () => location.hash.slice(1).toLowerCase() || '/';
+const parseLocation = () => location.hash.slice(1) || '/';
 
-const findComponentByPath = (path, routes) => routes.find(r => path.match(r.path, 'gm')) || undefined;
+const findComponentByPath = (path, routes) => routes.find(r => path.match(r.pathPattern, 'gm')) || null;
 
+const extractId = (path) => path.match(/\/([0-9]+)/, 'gm') ? path.match(/\/([0-9]+)/, 'gm')[0].replace("/", "") : null;
+
+const extractPageNumber = (path) => path.match(/(pageNumber=[0-9]+)/, 'gm') ? path.match(/(pageNumber=[0-9]+)/, 'gm')[0].replace("pageNumber=", "") : null;
+
+const extractPageSize = (path) => path.match(/(pageSize=[0-9]+)/, 'gm') ? path.match(/(pageSize=[0-9]+)/, 'gm')[0].replace("pageSize=", "") : null;
 
 window.addEventListener('hashchange', router);
 window.addEventListener('load', router);
