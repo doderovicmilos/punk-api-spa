@@ -40,8 +40,6 @@ class Router {
   }
 
   render(component){
-    console.log(component);
-    console.log(component.getContent());
     document.getElementById('app').innerHTML = "";
     document.getElementById('app').appendChild(component.getContent());
   }
