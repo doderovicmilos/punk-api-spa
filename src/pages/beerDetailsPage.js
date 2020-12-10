@@ -58,7 +58,10 @@ export default class BeerDetailsPage {
           ?
           `<section><h3>Loading details</h3></section>`
           :
-          `<section><h3>Name: ${this.model.name}</h3></section>`
+          `<section>
+            <h3>${this.model.name}</h3>
+            <p>${this.model.description}</p>
+          </section>`
   };
 
 
