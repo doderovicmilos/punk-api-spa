@@ -1,5 +1,19 @@
-body {}
+body {
+    font-family: "Oswald", "Courier New", monospace;
+}
 
+a, p, h2, h3{
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #636363;
+}
+
+a:hover{
+     color: #333;
+}
 
 nav {
     width: 300px;
@@ -8,7 +22,17 @@ nav {
     margin: auto;
 }
 
-body nav a{
+body nav a {
     font-size: 1.5em;
     width: 100px;
 }
+
+.page{
+    width: 800px;
+    margin: auto;
+}
+
+.list-item > .list-item-title a {
+    text-decoration: none;
+}
+

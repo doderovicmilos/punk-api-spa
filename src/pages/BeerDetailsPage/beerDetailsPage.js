@@ -1,7 +1,7 @@
-import beerDetailsTemplate from "../templates/beerDetailsTemplate.html";
-import errorTemplate from "../templates/errorTemplate.html";
-import loaderTemplate from "../templates/loaderTemplate.html";
-
+import beerDetailsTemplate from "./beerDetailsTemplate.html";
+import errorTemplate from "../../templates/errorTemplate.html";
+import loaderTemplate from "../../templates/loaderTemplate.html";
+import "./beerDetailsPage.css";
 
 
 export default class BeerDetailsPage {
@@ -45,23 +45,32 @@ export default class BeerDetailsPage {
     this.router.render(this);
   }
 
+  createBaseElement(){
+    const element = document.createElement('section');
+    element.className = 'page beer-details-page';
+    return element;
+  }
+
   getDetailsContent(){
-    const element = document.createElement('div');
+    const element = this.createBaseElement();
     element.innerHTML = beerDetailsTemplate;
-    element.querySelector('.details-name').innerText = this.model.name;
-    element.querySelector('.details-description').innerText = this.model.description;
+    element.querySelector('.details-title h2').innerText = this.model.name;
+    element.querySelector('.details-title p').innerText = this.model.tagline;
+    element.querySelector('.details-description p').innerText = this.model.description;
+    element.querySelector('.details-description img').src = this.model.image_url;
+
     return element;
   }
 
   getErrorContent(){
-    const element = document.createElement('section');
+    const element = this.createBaseElement();
     element.innerHTML = errorTemplate;
     element.querySelector('.error-message').innerText = this.error.message;
     return element;
   }
 
   getLoaderContent(){
-    const element = document.createElement('section');
+    const element = this.createBaseElement();
     element.innerHTML = loaderTemplate;
     element.querySelector('.loader-message').innerText = 'Loading details page...';
     return element;

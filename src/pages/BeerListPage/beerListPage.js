@@ -1,7 +1,7 @@
-import beerListItemTemplate from "../templates/beerListItemTemplate.html"
-import errorTemplate from "../templates/errorTemplate.html";
-import loaderTemplate from "../templates/loaderTemplate.html";
-
+import beerListItemTemplate from "./beerListItemTemplate.html"
+import errorTemplate from "../../templates/errorTemplate.html";
+import loaderTemplate from "../../templates/loaderTemplate.html";
+import "./beerListPage.css";
 
 export default class BeerListPage {
 
@@ -45,8 +45,14 @@ export default class BeerListPage {
     this.router.render(this);
   }
 
+  createBaseElement(){
+    const element = document.createElement('section');
+    element.className = 'page beer-list-page';
+    return element;
+  }
+
   getListContent(){
-    const container = document.createElement('section');
+    const container = this.createBaseElement();
 
     this.list.forEach(el => {
       const element = document.createElement('div');
@@ -59,14 +65,14 @@ export default class BeerListPage {
   }
 
   getErrorContent(){
-    const element = document.createElement('section');
+    const element = this.createBaseElement();
     element.innerHTML = errorTemplate;
     element.querySelector('.error-message').innerText = this.error.message;
     return element;
   }
 
   getLoaderContent(){
-    const element = document.createElement('section');
+    const element = this.createBaseElement();
     element.innerHTML = loaderTemplate;
     element.querySelector('.loader-message').innerText = 'Loading list page...';
     return element;

@@ -1,4 +1,4 @@
-import errorTemplate from "../templates/errorTemplate.html";
+import errorTemplate from "../../templates/errorTemplate.html";
 
 export default class HomePage{
 
@@ -9,6 +9,7 @@ export default class HomePage{
   getContent() {
     const element = document.createElement('section');
     element.innerHTML = errorTemplate;
+    element.className = 'page error-page'
     element.querySelector('.error-message').innerText = 'Requested url does not exist...';
     return element;
   }

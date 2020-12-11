@@ -1,0 +1,26 @@
+.details-description {
+    display: flex;
+    justify-content: space-around;
+}
+
+.details-description > img {
+    height: 190px;
+    transition: transform .5s ease-in-out;
+}
+
+.details-description > img:hover {
+    transform: rotateY(360deg);
+}
+
+.details-description > p {
+    width: 620px;
+}
+
+.details-title h2 {
+    margin-bottom: 5px;
+}
+
+.details-title p {
+    margin-top: 5px;
+    margin-bottom: 25px;
+}

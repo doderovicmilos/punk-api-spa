@@ -1,7 +1,7 @@
-import homePage from '../pages/homePage';
-import beerListPage from "../pages/beerListPage";
-import errorPage from "../pages/errorPage";
-import BeerDetailsPage from "../pages/beerDetailsPage";
+import homePage from '../pages/HomePage/homePage';
+import beerListPage from "../pages/BeerListPage/beerListPage";
+import errorPage from "../pages/ErrorPage/errorPage";
+import BeerDetailsPage from "../pages/BeerDetailsPage/beerDetailsPage";
 
 class Router {
 
