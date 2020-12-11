@@ -3,16 +3,16 @@
     justify-content: space-around;
 }
 
-.details-description > img {
+.details-description img {
     height: 190px;
     transition: transform .5s ease-in-out;
 }
 
-.details-description > img:hover {
+.details-description img:hover {
     transform: rotateY(360deg);
 }
 
-.details-description > p {
+.details-description p {
     width: 620px;
 }
 
