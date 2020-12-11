@@ -10,7 +10,7 @@ Lists page size and page number can be altered via query params 'pageSize' and '
 
 Error can be provoked by setting pageSize query param to 1000 or id parameter on details page to 500. 
 
-Does not contain any css for now.
+Dev server runs on http://localhost:8888/
 
 ## Installation
 
