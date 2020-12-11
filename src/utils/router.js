@@ -7,9 +7,9 @@ class Router {
 
   constructor() {
     this.routes = [
-      {pathPattern: /^\/$/, component: homePage},
-      {pathPattern: /^\/list/, component: beerListPage},
-      {pathPattern: /^\/details\/\d{1,4}$/, component: BeerDetailsPage}
+      {path: '/', component: homePage},
+      {path: '/list', component: beerListPage},
+      {path: '/details', component: BeerDetailsPage}
     ];
     window.addEventListener('hashchange', this.route.bind(this));
     window.addEventListener('load', this.route.bind(this));
@@ -26,7 +26,11 @@ class Router {
   }
 
   findComponentByPath(path) {
-    return this.routes.find(r => path.match(r.pathPattern, 'gm')) || null;
+    return this.routes.find(r => {
+      const routePath = r.path;
+      if (routePath.length === 1) return path.match(new RegExp(`^\\${routePath}$`, 'gm'));
+      else return path.match(new RegExp(`^\\${routePath}`, 'gm'));
+    }) || null;
   }
 
   extractId() {
